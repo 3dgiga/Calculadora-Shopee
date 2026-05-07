@@ -2,305 +2,338 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calculadora Shopee 2026 - Precificação Completa</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Calculadora Shopee 2026</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
-        body { font-family: 'Inter', sans-serif; }
-        .card { transition: all 0.3s ease; }
-        .card:hover { transform: translateY(-4px); }
-        input[type="range"] { accent-color: #00b14f; }
+        * { box-sizing: border-box; }
+        body { 
+            font-family: 'Inter', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
+            background: linear-gradient(180deg, #f0fdf4 0%, #fff 100%);
+        }
+        .card { transition: transform 0.2s ease; }
+        .card:active { transform: scale(0.995); }
+        input[type="number"] { 
+            -moz-appearance: textfield; 
+            accent-color: #00b14f;
+        }
+        input[type="number"]::-webkit-outer-spin-button,
+        input[type="number"]::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        @media screen and (-webkit-min-device-pixel-ratio: 0) {
+            input, select, textarea { font-size: 16px !important; }
+        }
+        .scroll-x { 
+            -webkit-overflow-scrolling: touch; 
+            scrollbar-width: none; 
+        }
+        .scroll-x::-webkit-scrollbar { display: none; }
     </style>
 </head>
-<body class="bg-gray-50">
-    <div class="max-w-7xl mx-auto p-6">
-        <div class="flex justify-between items-center mb-8">
-            <div>
-                <h1 class="text-4xl font-bold text-emerald-600">🛍️ Calculadora Shopee 2026</h1>
-                <p class="text-gray-600 mt-2">Precificação inteligente com novas regras de comissão</p>
+<body class="min-h-screen">
+    
+    <!-- Container estilo app mobile portrait -->
+    <div class="max-w-md mx-auto bg-white min-h-screen flex flex-col shadow-2xl">
+        
+        <!-- Header fixo compacto -->
+        <header class="sticky top-0 z-40 bg-white/95 backdrop-blur-sm border-b border-gray-100 px-4 py-3">
+            <div class="flex items-center justify-between">
+                <h1 class="text-lg font-bold text-emerald-600">🛍️ Shopee Calc</h1>
+                <span class="text-[10px] bg-emerald-100 text-emerald-700 px-2 py-1 rounded-full font-medium">2026</span>
             </div>
-            <div class="text-sm text-gray-500">
-                Atualizada para regras de <span class="font-semibold">Março 2026</span>
+        </header>
+
+        <!-- Conteúdo principal scrollável -->
+        <main class="flex-1 overflow-y-auto px-4 py-3 space-y-3 pb-20">
+            
+            <!-- 🔥 Resultado em DESTAQUE no topo -->
+            <div id="resultadoRapido" class="bg-gradient-to-r from-emerald-500 to-emerald-600 rounded-2xl p-4 text-white shadow-lg">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <div class="text-[10px] uppercase tracking-wider opacity-90">Lucro Líquido</div>
+                        <div class="text-3xl font-bold mt-0.5" id="lucroLiquido">R$ 19,32</div>
+                    </div>
+                    <div class="text-right">
+                        <div class="text-[10px] opacity-90">Margem</div>
+                        <div id="margemPercent" class="text-lg font-bold">31.2%</div>
+                    </div>
+                </div>
+                <!-- Mini barra de progresso visual -->
+                <div class="mt-3 h-1.5 bg-white/20 rounded-full overflow-hidden">
+                    <div id="barraMargem" class="h-full bg-white rounded-full transition-all duration-500" style="width: 31%"></div>
+                </div>
             </div>
-        </div>
 
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            <!-- Painel de Entrada -->
-            <div class="lg:col-span-1 space-y-6">
-                <div class="bg-white rounded-2xl shadow-xl p-6 card">
-                    <h2 class="text-xl font-semibold mb-4 flex items-center gap-2">
-                        <i class="fa-solid fa-box"></i> Dados do Produto
-                    </h2>
-                    
-                    <div class="space-y-5">
+            <!-- 📦 Dados do Produto -->
+            <div class="bg-white rounded-2xl border border-gray-100 p-4 card shadow-sm">
+                <h2 class="text-sm font-semibold mb-3 flex items-center gap-2 text-gray-800">
+                    <i class="fa-solid fa-box-open text-emerald-500"></i> Produto
+                </h2>
+                
+                <div class="space-y-3">
+                    <!-- Input grid 2 colunas para economizar espaço -->
+                    <div class="grid grid-cols-2 gap-2">
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Custo do Produto (R$)</label>
-                            <input id="custoProduto" type="number" value="29.99" step="0.01" 
-                                   class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent text-lg"
-                                   oninput="calcularTudo()">
+                            <label class="block text-[10px] text-gray-500 mb-1">Custo</label>
+                            <div class="relative">
+                                <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-xs">R$</span>
+                                <input id="custoProduto" type="number" inputmode="decimal" value="29.99" step="0.01" 
+                                       class="w-full pl-8 pr-2 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm font-medium focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+                                       oninput="calcularTudo()">
+                            </div>
                         </div>
-
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Custos Extras (R$)</label>
-                            <input id="custosExtras" type="number" value="0" step="0.01" 
-                                   class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent text-lg"
-                                   oninput="calcularTudo()">
+                            <label class="block text-[10px] text-gray-500 mb-1">Extras</label>
+                            <div class="relative">
+                                <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-xs">R$</span>
+                                <input id="custosExtras" type="number" inputmode="decimal" value="0" step="0.01" 
+                                       class="w-full pl-8 pr-2 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+                                       oninput="calcularTudo()">
+                            </div>
                         </div>
+                    </div>
 
+                    <div class="grid grid-cols-2 gap-2">
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Alíquota de Impostos (%)</label>
-                            <input id="aliquotaImpostos" type="number" value="0" step="0.01" 
-                                   class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent text-lg"
-                                   oninput="calcularTudo()">
+                            <label class="block text-[10px] text-gray-500 mb-1">Impostos %</label>
+                            <div class="relative">
+                                <input id="aliquotaImpostos" type="number" inputmode="decimal" value="0" step="0.01" 
+                                       class="w-full px-3 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+                                       oninput="calcularTudo()">
+                                <span class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 text-xs">%</span>
+                            </div>
                         </div>
-
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Preço de Venda (R$)</label>
-                            <input id="precoVenda" type="number" value="61.99" step="0.01" 
-                                   class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent text-2xl font-semibold"
-                                   oninput="calcularTudo()">
-                        </div>
-
-                        <div class="pt-4 border-t">
-                            <label class="flex items-center gap-2 text-sm font-medium text-gray-700">
-                                <input type="checkbox" id="freteGratis" checked class="w-5 h-5 text-emerald-600" onchange="calcularTudo()">
-                                Participar do Programa de Frete Grátis (20% comissão)
-                            </label>
-                        </div>
-
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Tipo de Vendedor</label>
-                            <div class="flex gap-2">
+                            <label class="block text-[10px] text-gray-500 mb-1">Vendedor</label>
+                            <div class="flex bg-gray-100 rounded-xl p-0.5">
                                 <button onclick="setTipoVendedor(0)" id="btnCNPJ" 
-                                        class="flex-1 py-3 rounded-xl font-medium border-2 border-emerald-600 text-emerald-600">CNPJ</button>
+                                        class="flex-1 py-1.5 rounded-lg text-[10px] font-medium bg-white text-emerald-600 shadow-sm">CNPJ</button>
                                 <button onclick="setTipoVendedor(1)" id="btnCPF" 
-                                        class="flex-1 py-3 rounded-xl font-medium border-2">CPF</button>
+                                        class="flex-1 py-1.5 rounded-lg text-[10px] font-medium text-gray-500">CPF</button>
                             </div>
                         </div>
                     </div>
-                </div>
 
-                <!-- Resultado Rápido -->
-                <div id="resultadoRapido" class="bg-white rounded-2xl shadow-xl p-6 card">
-                    <div class="text-center">
-                        <div class="text-emerald-600 text-5xl font-bold" id="lucroLiquido">R$ 19,32</div>
-                        <div class="text-gray-500">Lucro Líquido Estimado</div>
-                        <div id="margemPercent" class="text-2xl font-semibold text-emerald-600 mt-2">31.17%</div>
+                    <!-- Preço de Venda - DESTAQUE -->
+                    <div>
+                        <label class="block text-[10px] text-gray-500 mb-1">Preço de Venda</label>
+                        <div class="relative">
+                            <span class="absolute left-4 top-1/2 -translate-y-1/2 text-emerald-600 text-sm font-bold">R$</span>
+                            <input id="precoVenda" type="number" inputmode="decimal" value="61.99" step="0.01" 
+                                   class="w-full pl-10 pr-3 py-3 bg-emerald-50 border-2 border-emerald-200 rounded-xl text-2xl font-bold text-emerald-700 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                                   oninput="calcularTudo()">
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Painel de Detalhes -->
-            <div class="lg:col-span-2">
-                <div class="bg-white rounded-2xl shadow-xl p-6 card">
-                    <div class="flex justify-between items-center mb-6">
-                        <h2 class="text-xl font-semibold">Detalhamento de Custos</h2>
-                        <div class="flex gap-2">
-                            <button onclick="toggleMode(0)" id="btnNormal" 
-                                    class="px-5 py-2 rounded-xl text-sm font-medium bg-emerald-100 text-emerald-700">Normal</button>
-                            <button onclick="toggleMode(1)" id="btnFrete" 
-                                    class="px-5 py-2 rounded-xl text-sm font-medium">Com Frete Grátis</button>
-                        </div>
+            <!-- 📊 Detalhamento Compacto -->
+            <div class="bg-white rounded-2xl border border-gray-100 p-4 card shadow-sm">
+                <h2 class="text-sm font-semibold mb-3 flex items-center gap-2 text-gray-800">
+                    <i class="fa-solid fa-receipt text-emerald-500"></i> Detalhes da Venda
+                </h2>
+
+                <!-- Lista de taxas ultra compacta -->
+                <div class="space-y-2 text-xs">
+                    <div class="flex justify-between py-1.5 border-b border-dashed border-gray-100">
+                        <span class="text-gray-500">Comissão Shopee</span>
+                        <span class="font-medium text-gray-800" id="taxaComissao">20% + R$ 4,00</span>
                     </div>
-
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                        <!-- Tabela de Taxas Shopee -->
-                        <div>
-                            <h3 class="font-semibold mb-3 text-gray-700">Taxas da Shopee</h3>
-                            <div class="space-y-3" id="detalheTaxas">
-                                <!-- Populada via JS -->
-                            </div>
-                        </div>
-
-                        <!-- Resumo Financeiro -->
-                        <div>
-                            <h3 class="font-semibold mb-3 text-gray-700">Resumo da Venda</h3>
-                            <div class="bg-gray-50 rounded-2xl p-5 space-y-4" id="resumoFinanceiro">
-                                <!-- Populada via JS -->
-                            </div>
-                        </div>
+                    <div class="flex justify-between py-1.5 border-b border-dashed border-gray-100">
+                        <span class="text-gray-500">Valor comissão</span>
+                        <span class="font-medium text-red-500" id="valorComissao">-R$ 12,40</span>
+                    </div>
+                    <div class="flex justify-between py-1.5 border-b border-dashed border-gray-100">
+                        <span class="text-gray-500">Taxa fixa</span>
+                        <span class="font-medium text-red-500" id="taxaFixa">-R$ 4,00</span>
+                    </div>
+                    <div class="flex justify-between py-1.5">
+                        <span class="text-gray-500">Impostos</span>
+                        <span class="font-medium text-red-500" id="valorImpostos">-R$ 0,00</span>
                     </div>
                 </div>
 
-                <!-- Tabela de Faixas de Comissão -->
-                <div class="mt-6 bg-white rounded-2xl shadow-xl p-6 card">
-                    <h3 class="font-semibold mb-4">Faixas de Comissão Shopee 2026 (CNPJ)</h3>
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-sm">
+                <!-- Separador visual -->
+                <div class="h-px bg-gradient-to-r from-transparent via-gray-200 to-transparent my-3"></div>
+
+                <!-- Resumo final -->
+                <div class="space-y-2 text-xs">
+                    <div class="flex justify-between">
+                        <span class="text-gray-500">Custo total</span>
+                        <span class="font-semibold text-gray-800" id="custoTotal">R$ 42,67</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-gray-500">ROI</span>
+                        <span class="font-semibold text-emerald-600" id="valorRoi">64.4%</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 📋 Faixas de Comissão - VERSÃO ULTRA COMPACTA -->
+            <details class="bg-white rounded-2xl border border-gray-100 overflow-hidden card shadow-sm">
+                <summary class="flex items-center justify-between p-3.5 cursor-pointer list-none active:bg-gray-50">
+                    <span class="text-xs font-semibold text-gray-700 flex items-center gap-2">
+                        <i class="fa-solid fa-table-list text-emerald-500"></i> Faixas Shopee
+                    </span>
+                    <i class="fa-solid fa-chevron-down text-gray-400 text-xs transition-transform duration-200 open:rotate-180"></i>
+                </summary>
+                <div class="px-3.5 pb-3.5">
+                    <!-- Tabela minimalista horizontal scroll -->
+                    <div class="scroll-x overflow-x-auto -mx-1">
+                        <table class="w-full text-[10px] whitespace-nowrap">
                             <thead>
-                                <tr class="border-b">
-                                    <th class="text-left py-3 px-4">Faixa de Preço</th>
-                                    <th class="text-right py-3 px-4">Comissão %</th>
-                                    <th class="text-right py-3 px-4">Taxa Fixa</th>
+                                <tr class="text-gray-400 border-b border-gray-100">
+                                    <th class="text-left py-2 px-2 font-medium">Faixa</th>
+                                    <th class="text-right py-2 px-2 font-medium">%</th>
+                                    <th class="text-right py-2 px-2 font-medium">Fixa</th>
                                 </tr>
                             </thead>
                             <tbody class="text-gray-600" id="tabelaFaixas">
-                                <!-- Populada via JS -->
+                                <!-- Populado via JS -->
                             </tbody>
                         </table>
                     </div>
-                    <p class="text-xs text-gray-500 mt-4">* Taxa fixa adicional por item vendido. Pix pode ter subsídio.</p>
+                    <p class="text-[9px] text-gray-400 mt-2 text-center">* Fixa por item • CPF +R$3</p>
                 </div>
-            </div>
-        </div>
+            </details>
 
-        <footer class="text-center text-gray-400 text-sm mt-12">
-            Calculadora educativa • Baseada nas regras oficiais da Shopee Brasil 2026
+        </main>
+
+        <!-- Footer fixo com dica -->
+        <footer class="sticky bottom-0 bg-white/95 backdrop-blur-sm border-t border-gray-100 px-4 py-2.5 text-center">
+            <p class="text-[10px] text-gray-400">Toque nos campos para editar • Cálculo automático</p>
         </footer>
+
+    </div>
+
+    <!-- Toast feedback -->
+    <div id="toast" class="fixed bottom-20 left-1/2 -translate-x-1/2 bg-gray-900/95 text-white px-4 py-2.5 rounded-xl shadow-xl text-[11px] opacity-0 transition-all duration-200 pointer-events-none z-50 flex items-center gap-2">
+        <i class="fa-solid fa-circle-check text-emerald-400"></i>
+        <span id="toastMsg">Atualizado</span>
     </div>
 
     <script>
         let tipoVendedor = 0; // 0 = CNPJ, 1 = CPF
-        let modoFrete = 0; // 0 = normal, 1 = frete gratis
+        let toastTimeout;
+
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toastMsg').textContent = msg;
+            toast.classList.remove('opacity-0', 'translate-y-2');
+            toast.classList.add('opacity-100', 'translate-y-0');
+            clearTimeout(toastTimeout);
+            toastTimeout = setTimeout(() => {
+                toast.classList.remove('opacity-100', 'translate-y-0');
+                toast.classList.add('opacity-0', 'translate-y-2');
+            }, 1800);
+        }
 
         function setTipoVendedor(tipo) {
             tipoVendedor = tipo;
-            document.getElementById('btnCNPJ').classList.toggle('border-emerald-600', tipo === 0);
-            document.getElementById('btnCNPJ').classList.toggle('text-emerald-600', tipo === 0);
-            document.getElementById('btnCPF').classList.toggle('border-emerald-600', tipo === 1);
-            document.getElementById('btnCPF').classList.toggle('text-emerald-600', tipo === 1);
-            calcularTudo();
-        }
-
-        function toggleMode(mode) {
-            modoFrete = mode;
-            document.getElementById('btnNormal').classList.toggle('bg-emerald-100', mode === 0);
-            document.getElementById('btnNormal').classList.toggle('text-emerald-700', mode === 0);
-            document.getElementById('btnFrete').classList.toggle('bg-emerald-100', mode === 1);
-            document.getElementById('btnFrete').classList.toggle('text-emerald-700', mode === 1);
+            const btnCNPJ = document.getElementById('btnCNPJ');
+            const btnCPF = document.getElementById('btnCPF');
+            
+            if (tipo === 0) {
+                btnCNPJ.className = 'flex-1 py-1.5 rounded-lg text-[10px] font-medium bg-white text-emerald-600 shadow-sm';
+                btnCPF.className = 'flex-1 py-1.5 rounded-lg text-[10px] font-medium text-gray-500';
+            } else {
+                btnCPF.className = 'flex-1 py-1.5 rounded-lg text-[10px] font-medium bg-white text-emerald-600 shadow-sm';
+                btnCNPJ.className = 'flex-1 py-1.5 rounded-lg text-[10px] font-medium text-gray-500';
+            }
             calcularTudo();
         }
 
         function getTaxaShopee(preco) {
-            let comissaoPercent = 0;
-            let taxaFixa = 0;
-
-            if (preco <= 79.99) {
-                comissaoPercent = 20;
-                taxaFixa = 4;
-            } else if (preco <= 99.99) {
-                comissaoPercent = 14;
-                taxaFixa = 16;
-            } else if (preco <= 199.99) {
-                comissaoPercent = 14;
-                taxaFixa = 20;
-            } else if (preco <= 499.99) {
-                comissaoPercent = 14;
-                taxaFixa = 26;
-            } else {
-                comissaoPercent = 14;
-                taxaFixa = 28;
-            }
-
-            // Se frete grátis está ativado, força 20% + fixa
-            if (modoFrete === 1) {
-                comissaoPercent = 20;
-            }
-
-            // Taxa extra CPF
-            const taxaExtraCPF = (tipoVendedor === 1) ? 3 : 0;
-            taxaFixa += taxaExtraCPF;
-
+            let comissaoPercent = 0, taxaFixa = 0;
+            
+            // Faixas oficiais Shopee 2026 para CNPJ
+            if (preco <= 79.99) { comissaoPercent = 20; taxaFixa = 4; }
+            else if (preco <= 99.99) { comissaoPercent = 14; taxaFixa = 16; }
+            else if (preco <= 199.99) { comissaoPercent = 14; taxaFixa = 20; }
+            else if (preco <= 499.99) { comissaoPercent = 14; taxaFixa = 26; }
+            else { comissaoPercent = 14; taxaFixa = 28; }
+            
+            // Taxa extra para CPF
+            if (tipoVendedor === 1) taxaFixa += 3;
+            
             const comissaoValor = (preco * comissaoPercent) / 100;
-            return {
-                comissaoPercent,
-                taxaFixa,
-                comissaoValor,
-                totalTaxaShopee: comissaoValor + taxaFixa
-            };
+            return { comissaoPercent, taxaFixa, comissaoValor, total: comissaoValor + taxaFixa };
+        }
+
+        function fmt(v) { 
+            return v.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }); 
         }
 
         function calcularTudo() {
-            const custoProduto = parseFloat(document.getElementById('custoProduto').value) || 0;
-            const custosExtras = parseFloat(document.getElementById('custosExtras').value) || 0;
-            const aliquotaImpostos = parseFloat(document.getElementById('aliquotaImpostos').value) || 0;
-            const precoVenda = parseFloat(document.getElementById('precoVenda').value) || 0;
+            const cp = parseFloat(document.getElementById('custoProduto').value) || 0;
+            const ce = parseFloat(document.getElementById('custosExtras').value) || 0;
+            const ai = parseFloat(document.getElementById('aliquotaImpostos').value) || 0;
+            const pv = parseFloat(document.getElementById('precoVenda').value) || 0;
 
-            const taxaShopee = getTaxaShopee(precoVenda);
-            
-            const impostos = (precoVenda * aliquotaImpostos) / 100;
-            
-            const custoTotal = custoProduto + custosExtras + impostos + taxaShopee.totalTaxaShopee;
-            
-            const lucroLiquido = precoVenda - custoTotal;
-            const margemContribuicao = precoVenda > 0 ? (lucroLiquido / precoVenda) * 100 : 0;
-            
-            // ROI
-            const roi = custoProduto > 0 ? (lucroLiquido / custoProduto) * 100 : 0;
+            const ts = getTaxaShopee(pv);
+            const imp = (pv * ai) / 100;
+            const total = cp + ce + imp + ts.total;
+            const lucro = pv - total;
+            const margem = pv > 0 ? (lucro / pv) * 100 : 0;
+            const roi = cp > 0 ? (lucro / cp) * 100 : 0;
 
-            // Atualiza resultado rápido
-            document.getElementById('lucroLiquido').textContent = 
-                lucroLiquido >= 0 ? `R$ ${lucroLiquido.toFixed(2)}` : `-R$ ${Math.abs(lucroLiquido).toFixed(2)}`;
-            document.getElementById('lucroLiquido').className = 
-                lucroLiquido >= 0 ? "text-emerald-600 text-5xl font-bold" : "text-red-600 text-5xl font-bold";
+            // Resultado principal
+            const lucEl = document.getElementById('lucroLiquido');
+            lucEl.textContent = lucro >= 0 ? `R$ ${fmt(lucro)}` : `-R$ ${fmt(Math.abs(lucro))}`;
+            lucEl.className = lucro >= 0 ? 'text-3xl font-bold text-white' : 'text-3xl font-bold text-red-100';
             
-            document.getElementById('margemPercent').textContent = margemContribuicao.toFixed(2) + "%";
-            document.getElementById('margemPercent').className = 
-                margemContribuicao >= 25 ? "text-2xl font-semibold text-emerald-600 mt-2" : 
-                (margemContribuicao >= 15 ? "text-2xl font-semibold text-amber-600 mt-2" : "text-2xl font-semibold text-red-600 mt-2");
+            const marEl = document.getElementById('margemPercent');
+            marEl.textContent = margem.toFixed(1) + '%';
+            document.getElementById('barraMargem').style.width = Math.max(0, Math.min(100, margem)) + '%';
+            
+            // Cores da margem
+            if (margem >= 25) {
+                marEl.className = 'text-lg font-bold text-white';
+                document.getElementById('barraMargem').className = 'h-full bg-white rounded-full transition-all duration-500';
+            } else if (margem >= 15) {
+                marEl.className = 'text-lg font-bold text-amber-100';
+                document.getElementById('barraMargem').className = 'h-full bg-amber-300 rounded-full transition-all duration-500';
+            } else {
+                marEl.className = 'text-lg font-bold text-red-100';
+                document.getElementById('barraMargem').className = 'h-full bg-red-300 rounded-full transition-all duration-500';
+            }
 
-            // Detalhe de taxas
-            let htmlTaxas = `
-                <div class="flex justify-between py-2 border-b">
-                    <span>Comissão Shopee</span>
-                    <span class="font-medium">${taxaShopee.comissaoPercent}% + R$ ${taxaShopee.taxaFixa.toFixed(2)}</span>
-                </div>
-                <div class="flex justify-between py-2 border-b">
-                    <span>Valor da Comissão</span>
-                    <span class="font-medium text-red-600">-R$ ${taxaShopee.comissaoValor.toFixed(2)}</span>
-                </div>
-                <div class="flex justify-between py-2 border-b">
-                    <span>Taxa Fixa Shopee</span>
-                    <span class="font-medium text-red-600">-R$ ${taxaShopee.taxaFixa.toFixed(2)}</span>
-                </div>
-                <div class="flex justify-between py-2 border-b">
-                    <span>Impostos (${aliquotaImpostos}%)</span>
-                    <span class="font-medium text-red-600">-R$ ${impostos.toFixed(2)}</span>
-                </div>
-            `;
-            document.getElementById('detalheTaxas').innerHTML = htmlTaxas;
+            // Detalhes compactos
+            document.getElementById('taxaComissao').textContent = `${ts.comissaoPercent}% + R$ ${fmt(ts.taxaFixa)}`;
+            document.getElementById('valorComissao').textContent = `-R$ ${fmt(ts.comissaoValor)}`;
+            document.getElementById('taxaFixa').textContent = `-R$ ${fmt(ts.taxaFixa)}`;
+            document.getElementById('valorImpostos').textContent = `-R$ ${fmt(imp)}`;
+            document.getElementById('custoTotal').textContent = `R$ ${fmt(total)}`;
+            document.getElementById('valorRoi').textContent = `${roi.toFixed(1)}%`;
 
-            // Resumo Financeiro
-            let htmlResumo = `
-                <div class="flex justify-between">
-                    <span class="text-gray-600">Preço de Venda</span>
-                    <span class="font-semibold">R$ ${precoVenda.toFixed(2)}</span>
-                </div>
-                <div class="flex justify-between">
-                    <span class="text-gray-600">Custo Total</span>
-                    <span class="font-semibold text-red-600">R$ ${custoTotal.toFixed(2)}</span>
-                </div>
-                <div class="h-px bg-gray-200 my-3"></div>
-                <div class="flex justify-between text-lg">
-                    <span class="font-medium">Lucro Líquido</span>
-                    <span class="font-bold ${lucroLiquido >= 0 ? 'text-emerald-600' : 'text-red-600'}">R$ ${lucroLiquido.toFixed(2)}</span>
-                </div>
-                <div class="flex justify-between mt-4">
-                    <span class="text-gray-600">Margem de Contribuição</span>
-                    <span class="font-semibold">${margemContribuicao.toFixed(1)}%</span>
-                </div>
-                <div class="flex justify-between">
-                    <span class="text-gray-600">ROI</span>
-                    <span class="font-semibold">${roi.toFixed(1)}%</span>
-                </div>
-            `;
-            document.getElementById('resumoFinanceiro').innerHTML = htmlResumo;
+            // Tabela faixas (renderização única)
+            if (!window.faixasRendered) {
+                document.getElementById('tabelaFaixas').innerHTML = `
+                    <tr class="border-b border-gray-50"><td class="py-1.5 px-2">≤ R$79,99</td><td class="text-right">20%</td><td class="text-right">R$4</td></tr>
+                    <tr class="border-b border-gray-50"><td class="py-1.5 px-2">80-99,99</td><td class="text-right">14%</td><td class="text-right">R$16</td></tr>
+                    <tr class="border-b border-gray-50"><td class="py-1.5 px-2">100-199,99</td><td class="text-right">14%</td><td class="text-right">R$20</td></tr>
+                    <tr><td class="py-1.5 px-2">≥ R$200</td><td class="text-right">14%</td><td class="text-right">R$26+</td></tr>
+                `;
+                window.faixasRendered = true;
+            }
 
-            // Preencher tabela de faixas (exemplo estático)
-            const faixasHTML = `
-                <tr class="border-b"><td class="py-2 px-4">Até R$ 79,99</td><td class="text-right">20%</td><td class="text-right">R$ 4,00</td></tr>
-                <tr class="border-b"><td class="py-2 px-4">R$ 80 ~ 99,99</td><td class="text-right">14%</td><td class="text-right">R$ 16,00</td></tr>
-                <tr class="border-b"><td class="py-2 px-4">R$ 100 ~ 199,99</td><td class="text-right">14%</td><td class="text-right">R$ 20,00</td></tr>
-                <tr><td class="py-2 px-4">Acima de R$ 200</td><td class="text-right">14%</td><td class="text-right">R$ 26~28</td></tr>
-            `;
-            document.getElementById('tabelaFaixas').innerHTML = faixasHTML;
+            showToast('✓');
         }
 
-        // Inicialização
+        // Init
         window.onload = function() {
             calcularTudo();
+            document.querySelectorAll('input').forEach(inp => {
+                inp.addEventListener('focus', (e) => {
+                    e.target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                });
+            });
         };
     </script>
 </body>
